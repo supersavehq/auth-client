@@ -1,0 +1,10 @@
+version: '3.2'
+
+services:
+  node:
+    image: node:18.10   
+    volumes:
+      - .:/app
+    user: 1000:1000      
+    working_dir: /app
+    command: npm run dev
