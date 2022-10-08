@@ -31,11 +31,17 @@ export type LoginRequest = {
   email: string;
   password: string;
 };
-export type LoginResponse = {
-  authorized: boolean;
-  accessToken?: string;
-  refreshToken?: string;
+export type LoginResponseSuccess = {
+  authorized: true;
+  accessToken: string;
+  refreshToken: string;
 };
+export type LoginResponseFailed = {
+  authorized: false;
+  message?: string;
+};
+
+export type LoginResponse = LoginResponseSuccess | LoginResponseFailed;
 
 export type LoginDataResponse = HttpDataResponse<LoginResponse>;
 
@@ -60,8 +66,8 @@ export type RegistrationResponseFailed = {
 };
 export type RegistrationResponseSuccess = {
   success: true;
-  accessToken?: string;
-  refreshToken?: string;
+  accessToken: string;
+  refreshToken: string;
 };
 
 export type RegistrationResponse =
