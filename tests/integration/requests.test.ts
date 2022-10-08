@@ -47,7 +47,10 @@ describe('login', () => {
     });
 
     expect(response.authorized).toBe(true);
-    expect(response.accessToken).toBeDefined();
+    if (response.authorized) {
+      // The if is so that ts understands it is the success response
+      expect(response.accessToken ?? '').toBeDefined();
+    }
   });
   it.each([
     ['no-success@example.com', PASSWORD],
@@ -62,7 +65,6 @@ describe('login', () => {
     });
 
     expect(response.authorized).toBe(false);
-    expect(response.accessToken).toBeUndefined();
   });
 });
 
@@ -76,10 +78,13 @@ describe('refresh', () => {
       email: EMAIL,
       password: PASSWORD,
     });
-    expect(loginResponse.refreshToken).toBeDefined();
+    if (!loginResponse.authorized) {
+      // The if is so that ts understands it is the success response
+      throw new Error('We expected the user to be authorized.');
+    }
 
     const response = await client.refresh({
-      token: loginResponse.refreshToken as string,
+      token: loginResponse.refreshToken ?? '',
     });
 
     expect(response.success).toBe(true);
