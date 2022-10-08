@@ -14,7 +14,6 @@ export const requester: Requester = {
         data: response.data,
       };
     } catch (error) {
-      console.log('@@', error);
       if (axios.isAxiosError(error)) {
         return {
           statusCode: error.status ?? 0,
