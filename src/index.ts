@@ -10,6 +10,7 @@ export {
   RefreshResponse,
   RegistrationRequest,
   RegistrationResponse,
+  Client,
 } from './types';
 import * as requests from './requests';
 
