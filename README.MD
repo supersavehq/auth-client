@@ -20,7 +20,7 @@ endpoint to the website + the path to the `supersave/auth` library that you conf
 
     import { initialize } from '@supersave/auth-client';
 
-    const client = await initialize({ baseUrl: 'http://example.server.com/api/auth' });
+    const client = initialize({ baseUrl: 'http://example.server.com/api/auth' });
 
 See [Options](#Options) for more details.
 

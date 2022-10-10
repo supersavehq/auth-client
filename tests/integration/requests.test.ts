@@ -14,7 +14,7 @@ afterAll(() => {
 describe('register', () => {
   test('succesful', async () => {
     const serverInfo = await serverInfoPromise;
-    const client = await initialize({ baseUrl: serverInfo.prefix, requester });
+    const client = initialize({ baseUrl: serverInfo.prefix, requester });
 
     const response = await client.register({
       email: EMAIL,
@@ -25,7 +25,7 @@ describe('register', () => {
   });
   test('bad request', async () => {
     const serverInfo = await serverInfoPromise;
-    const client = await initialize({ baseUrl: serverInfo.prefix, requester });
+    const client = initialize({ baseUrl: serverInfo.prefix, requester });
 
     const response = await client.register({
       email: EMAIL,
@@ -39,7 +39,7 @@ describe('register', () => {
 describe('login', () => {
   test('successful', async () => {
     const serverInfo = await serverInfoPromise;
-    const client = await initialize({ baseUrl: serverInfo.prefix, requester });
+    const client = initialize({ baseUrl: serverInfo.prefix, requester });
 
     const response = await client.login({
       email: EMAIL,
@@ -57,7 +57,7 @@ describe('login', () => {
     [EMAIL, 'invalid-password'],
   ])('password/username invalid', async (email, password) => {
     const serverInfo = await serverInfoPromise;
-    const client = await initialize({ baseUrl: serverInfo.prefix, requester });
+    const client = initialize({ baseUrl: serverInfo.prefix, requester });
 
     const response = await client.login({
       email,
@@ -71,7 +71,7 @@ describe('login', () => {
 describe('refresh', () => {
   test('success', async () => {
     const serverInfo = await serverInfoPromise;
-    const client = await initialize({ baseUrl: serverInfo.prefix, requester });
+    const client = initialize({ baseUrl: serverInfo.prefix, requester });
 
     // first login to get the access token
     const loginResponse = await client.login({
@@ -92,7 +92,7 @@ describe('refresh', () => {
   });
   test('invalid access token', async () => {
     const serverInfo = await serverInfoPromise;
-    const client = await initialize({ baseUrl: serverInfo.prefix, requester });
+    const client = initialize({ baseUrl: serverInfo.prefix, requester });
 
     const response = await client.refresh({
       token: 'invalid-token',

@@ -1,7 +1,7 @@
 import type { Options, Requester } from '../types';
 import { fetchRequester } from './fetch';
 
-export async function getRequester(options: Options): Promise<Requester> {
+export function getRequester(options: Options): Requester {
   if (options.requester) {
     return options.requester;
   }

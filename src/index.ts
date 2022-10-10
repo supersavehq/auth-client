@@ -14,8 +14,8 @@ export {
 } from './types';
 import * as requests from './requests';
 
-export async function initialize(options: Options): Promise<Client> {
-  const requester = await getRequester(options);
+export function initialize(options: Options): Client {
+  const requester = getRequester(options);
 
   const rawBaseUrl = options.baseUrl;
   const baseUrl =
