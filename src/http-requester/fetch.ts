@@ -8,7 +8,6 @@ async function post<T, D = any>(
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
@@ -16,7 +15,7 @@ async function post<T, D = any>(
   const json = await response.json();
   return {
     statusCode: response.status,
-    data: json.data,
+    data: json,
   };
 }
 

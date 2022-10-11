@@ -17,6 +17,7 @@ export const login =
     if (rsp.statusCode === 200) {
       return data;
     }
+
     return {
       authorized: false,
     };
