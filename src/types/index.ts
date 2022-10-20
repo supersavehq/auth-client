@@ -79,8 +79,12 @@ export type RegistrationDataResponse = HttpDataResponse<RegistrationResponse>;
 export type RefreshRequest = {
   token: string;
 };
-export type RefreshResponse = {
-  success: boolean;
-  accessToken?: string;
+export type RefreshResponseSuccess = {
+  success: true;
+  accessToken: string;
 };
+export type RefreshResponseFailed = {
+  success: false;
+};
+export type RefreshResponse = RefreshResponseSuccess | RefreshResponseFailed;
 export type RefreshDataResponse = HttpDataResponse<RefreshResponse>;
