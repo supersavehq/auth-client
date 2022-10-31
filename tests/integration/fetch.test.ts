@@ -11,12 +11,16 @@ const PASSWORD = 'abcdefg';
 // We combine login, register and refresh in one call so that we can re-use the supersave database.
 const serverInfoPromise = getServer();
 
-afterAll(() => {
-  serverInfoPromise.then((info) => info.close());
+afterAll(async () => {
+  const server = await serverInfoPromise;
+  server.close();
 });
 
 describe('fetch - register', () => {
-  test('succesful', async () => {
+  // Only run test when fetch is available.
+  const toInvoke = typeof fetch === 'undefined' ? test.skip : test;
+
+  toInvoke('succesful', async () => {
     const serverInfo = await serverInfoPromise;
     const client = initialize({ baseUrl: serverInfo.prefix });
 

@@ -27,5 +27,8 @@ export function initialize(options: Options): Client {
     login: requests.login(baseUrl, requester),
     register: requests.register(baseUrl, requester),
     refresh: requests.refresh(baseUrl, requester),
+    changePassword: requests.changePassword(baseUrl, requester),
+    requestResetPassword: requests.requestResetPassword(baseUrl, requester),
+    doResetPassword: requests.doResetPassword(baseUrl, requester),
   };
 }

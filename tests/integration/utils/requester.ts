@@ -5,10 +5,15 @@ export const requester: Requester = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   post: async function <T, D = any>(
     url: string,
-    data: D
+    data: D,
+    headers?: Record<string, string>
   ): Promise<HttpResponse<T>> {
     try {
-      const response = await axios.post<T>(url, data);
+      const response = await axios.post<T>(
+        url,
+        data,
+        typeof headers !== 'undefined' ? { headers } : undefined
+      );
       return {
         statusCode: response.status,
         data: response.data,
@@ -16,7 +21,7 @@ export const requester: Requester = {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         return {
-          statusCode: error.status ?? 0,
+          statusCode: error.response?.status ?? 0,
           data: error.response?.data ?? {},
         };
       }

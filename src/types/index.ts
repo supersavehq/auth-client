@@ -7,7 +7,8 @@ export interface Requester {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   post: <T, D = any>(
     url: string,
-    data?: D | undefined
+    data?: D | undefined,
+    headers?: Record<string, string>
   ) => Promise<HttpResponse<T>>;
 }
 
@@ -20,6 +21,13 @@ export type Client = {
   login: (request: LoginRequest) => Promise<LoginResponse>;
   register: (request: RegistrationRequest) => Promise<RegistrationResponse>;
   refresh: (request: RefreshRequest) => Promise<RefreshResponse>;
+  changePassword: (
+    request: ChangePasswordRequest
+  ) => Promise<ChangePasswordResponse>;
+  requestResetPassword: (request: RequestResetPasswordRequest) => Promise<void>;
+  doResetPassword: (
+    request: DoResetPasswordRequest
+  ) => Promise<DoResetPasswordResponse>;
 };
 
 /** HTTP response types */
@@ -88,3 +96,51 @@ export type RefreshResponseFailed = {
 };
 export type RefreshResponse = RefreshResponseSuccess | RefreshResponseFailed;
 export type RefreshDataResponse = HttpDataResponse<RefreshResponse>;
+
+export type ChangePasswordRequest = {
+  accessToken: string;
+  email: string;
+  password: string;
+  newPassword: string;
+};
+
+export type ChangePasswordResponseSuccess = {
+  success: true;
+  accessToken: string;
+  refreshToken: string;
+};
+export type ChangePasswordResponseFailure = {
+  success: false;
+  reason: 'INVALID_PASSWORD' | 'UNKNOWN' | 'INVALID_TOKEN';
+};
+export type ChangePasswordResponse =
+  | ChangePasswordResponseSuccess
+  | ChangePasswordResponseFailure;
+export type ChangePasswordDataResponse =
+  HttpDataResponse<ChangePasswordResponse>;
+
+export type RequestResetPasswordRequest = {
+  email: string;
+};
+
+export type DoResetPasswordRequest = {
+  password: string;
+  token: string;
+};
+
+export type DoResetPasswordResponseFailed = {
+  success: false;
+  reason: 'INVALID_TOKEN';
+};
+
+export type DoResetPasswordResponseSuccess = {
+  success: true;
+  accessToken: string;
+  refreshToken: string;
+};
+
+export type DoResetPasswordResponse =
+  | DoResetPasswordResponseFailed
+  | DoResetPasswordResponseSuccess;
+export type DoResetPasswordDataResponse =
+  HttpDataResponse<DoResetPasswordResponse>;

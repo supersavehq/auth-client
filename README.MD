@@ -92,6 +92,86 @@ const response = await client.refresh({token: 'yyy'});
 }
 ```
 
+### Change Password
+
+Used change the password for a user. It requires a valid accessToken.
+
+When the password is successfully changed all existing refreshTokens will be invalidated.
+
+```typescript
+// Request
+export type ChangePasswordRequest = {
+  accessToken: string;
+  email: string;
+  password: string;
+  newPassword: string;
+};
+
+// Response
+export type ChangePasswordResponseSuccess = {
+  success: true;
+  accessToken: string;
+  refreshToken: string;
+};
+export type ChangePasswordResponseFailure = {
+  success: false;
+  reason: 'INVALID_PASSWORD' | 'INVALID_TOKEN' | 'UNKNOWN';
+};
+```
+
+### Request a password reset token
+
+Request a password reset token. Use it in combination with the `requestResetPassword` hook in the server library to be able
+to obtain the generated reset token.
+
+If the function is invoked twice, the code from the first request is invalidated, only the last generated reset token is valid.
+
+Its result is a void result, which means that the token was succesfully generated. An error is thrown if the request fails.
+
+```typescript
+// Request
+export type RequestResetPasswordRequest = {
+  email: string;
+};
+```
+
+### Use an obtained reset token to reset a password
+
+When a user receives a reset password token, use this endpoint to use the token to change the password.
+On success, it will return a new refresh and access token.
+
+`INVALID_TOKEN` is currently the only reason for the request failing.
+
+All existing refresh tokens are invalidated.
+
+```typescript
+// Request
+export type DoResetPasswordRequest = {
+  password: string;
+  token: string;
+};
+
+// Response
+export type DoResetPasswordResponseFailed = {
+  data: {
+    success: false;
+    reason: 'INVALID_TOKEN';
+  };
+};
+
+export type DoResetPasswordResponseSuccess = {
+  data: {
+    success: true;
+    accessToken: string;
+    refreshToken: string;
+  };
+};
+
+export type DoResetPasswordResponse =
+  | DoResetPasswordResponseFailed
+  | DoResetPasswordResponseSuccess;
+```
+
 ## Options
 
 | option    | type      | required | description                                                                                       |
@@ -110,7 +190,8 @@ The requester is expected to implement the following interface:
 export interface Requester {
   post: <T, D = any>(
     url: string,
-    data?: D | undefined
+    data?: D | undefined,
+    headers?: Record<string, string>
   ) => Promise<HttpResponse<T>>;
 }
 ```
@@ -121,13 +202,17 @@ This is a sample implementation of a requester in axios/typescript.
 
 ```typescript
 export const requester: Requester = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   post: async function <T, D = any>(
     url: string,
-    data: D
+    data: D,
+    headers?: Record<string, string>
   ): Promise<HttpResponse<T>> {
     try {
-      const response = await axios.post<T>(url, data);
+      const response = await axios.post<T>(
+        url,
+        data,
+        typeof headers !== 'undefined' ? { headers } : undefined
+      );
       return {
         statusCode: response.status,
         data: response.data,
@@ -135,14 +220,13 @@ export const requester: Requester = {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         return {
-          statusCode: error.status ?? 0,
+          statusCode: error.response?.status ?? 0,
           data: error.response?.data ?? {},
         };
       }
 
       return {
         statusCode: 0,
-        // @ts-expect-error the {} can be mis-used.
         data: {},
       };
     }
