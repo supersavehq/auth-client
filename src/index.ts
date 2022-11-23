@@ -11,6 +11,11 @@ export {
   RegistrationRequest,
   RegistrationResponse,
   Client,
+  ChangePasswordRequest,
+  ChangePasswordResponse,
+  DoResetPasswordRequest,
+  DoResetPasswordResponse,
+  RequestResetPasswordRequest,
 } from './types';
 import * as requests from './requests';
 
