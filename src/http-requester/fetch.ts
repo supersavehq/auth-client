@@ -14,7 +14,12 @@ async function post<T, D = any>(
     },
     body: JSON.stringify(data),
   });
-  const json = await response.json();
+
+  const json = response.headers
+    .get('Content-Type')
+    ?.match(/^application\/json/i)
+    ? await response.json()
+    : undefined;
   return {
     statusCode: response.status,
     data: json,

@@ -16,10 +16,10 @@ afterAll(async () => {
   server.close();
 });
 
-describe('fetch - register', () => {
-  // Only run test when fetch is available.
-  const toInvoke = typeof fetch === 'undefined' ? test.skip : test;
+// Only run test when fetch is available.
+const toInvoke = typeof fetch === 'undefined' ? test.skip : test;
 
+describe('fetch - register', () => {
   toInvoke('succesful', async () => {
     const serverInfo = await serverInfoPromise;
     const client = initialize({ baseUrl: serverInfo.prefix });
@@ -30,5 +30,16 @@ describe('fetch - register', () => {
     });
 
     expect(response.success).toBe(true);
+  });
+});
+
+describe('fetch - request password reset', () => {
+  toInvoke('succesful', async () => {
+    const serverInfo = await serverInfoPromise;
+    const client = initialize({ baseUrl: serverInfo.prefix });
+
+    await client.requestResetPassword({
+      email: EMAIL,
+    });
   });
 });
