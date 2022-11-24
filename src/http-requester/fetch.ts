@@ -4,13 +4,13 @@ import type { HttpResponse, Requester } from '../types';
 async function post<T, D = any>(
   url: string,
   data: D,
-  headers?: Record<string, string>
+  headers: Record<string, string> = {}
 ): Promise<HttpResponse<T>> {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      ...(headers && {}),
+      ...headers,
     },
     body: JSON.stringify(data),
   });

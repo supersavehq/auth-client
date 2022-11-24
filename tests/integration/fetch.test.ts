@@ -19,17 +19,47 @@ afterAll(async () => {
 // Only run test when fetch is available.
 const toInvoke = typeof fetch === 'undefined' ? test.skip : test;
 
-describe('fetch - register', () => {
-  toInvoke('succesful', async () => {
-    const serverInfo = await serverInfoPromise;
-    const client = initialize({ baseUrl: serverInfo.prefix });
+describe('fetch - register/login/change-password', () => {
+  describe('register', () => {
+    toInvoke('succesful', async () => {
+      const serverInfo = await serverInfoPromise;
+      const client = initialize({ baseUrl: serverInfo.prefix });
 
-    const response = await client.register({
-      email: EMAIL,
-      password: PASSWORD,
+      const response = await client.register({
+        email: EMAIL,
+        password: PASSWORD,
+      });
+
+      expect(response.success).toBe(true);
+    });
+  });
+
+  describe('login / change password', () => {
+    let accessToken = '';
+
+    toInvoke('login', async () => {
+      const serverInfo = await serverInfoPromise;
+      const client = initialize({ baseUrl: serverInfo.prefix });
+
+      const result = await client.login({ email: EMAIL, password: PASSWORD });
+      expect(result.authorized).toBe(true);
+      if (result.authorized) {
+        accessToken = result.accessToken;
+      }
     });
 
-    expect(response.success).toBe(true);
+    toInvoke('change-password', async () => {
+      const serverInfo = await serverInfoPromise;
+      const client = initialize({ baseUrl: serverInfo.prefix });
+
+      const result = await client.changePassword({
+        accessToken,
+        email: EMAIL,
+        password: PASSWORD,
+        newPassword: `${PASSWORD}2`,
+      });
+      expect(result.success).toBe(true);
+    });
   });
 });
 
