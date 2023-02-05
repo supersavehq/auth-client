@@ -17,3 +17,4 @@ updates:
       - dependency-name: 'eslint-plugin-unicorn'
       - dependency-name: 'prettier'
       - dependency-name: 'typescript'
+      - dependency-name: 'jest-when'
